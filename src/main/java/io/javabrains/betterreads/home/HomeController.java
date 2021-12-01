@@ -33,11 +33,11 @@ public class HomeController {
         Slice<BooksByUser> booksSlice = booksByUserRepository.findAllById(userId, CassandraPageRequest.of(0, 100));
         List<BooksByUser> booksByUser = booksSlice.getContent();
         booksByUser = booksByUser.stream().distinct().map(book -> {
-
+            String coverImageUrl = null;
             if (book.getCoverIds() != null & book.getCoverIds().size() > 0) {
-                String coverImageUrl = COVER_IMAGE_ROOT + book.getCoverIds().get(0) + "-M.jpg";
-                book.setCoverUrl(coverImageUrl);
+                coverImageUrl = COVER_IMAGE_ROOT + book.getCoverIds().get(0) + "-M.jpg";
             }
+            book.setCoverUrl(coverImageUrl);
             return book;
         }).collect(Collectors.toList());
         model.addAttribute("books", booksByUser);
